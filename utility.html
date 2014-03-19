@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>morph util</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/util.css" rel="stylesheet" media="screen">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="http://getbootstrap.com/docs-assets/js/html5shiv.js"></script>
+    <script src="http://getbootstrap.com/docs-assets/js/respond.min.js"></script>
+
+    <![endif]-->
+
+
+    <script id="morphAnimation" type="text/x-dot-template">
+        <div id="{{=it.morphPanelId}}" class="panel panel-default">
+            <button id="upBtn" onclick="{{=it.moveUpFunc}}" type="button"
+                    class="btn btn-lg btn-block" data-toggle="button"><span
+                    class="glyphicon glyphicon-chevron-up"></span></button>
+            <p><a id="delBtn"
+                  class="btn btn-danger btn-xs pull-right" onclick="{{=it.setCurrentAnimFunc}}">Delete <span
+                    class="glyphicon glyphicon-remove-sign"></span></a></p>
+
+            <div class="panel-body">
+                <div class="row" style="{{=it.isPause=='false' && 'display:none'}}">
+                    <div class="alert alert-danger"><h2>PAUSE</h2></div>
+                </div>
+                <div class="row" style="{{=it.isPause=='true' && 'display:none'}}">
+                    <div class="alert alert-info"><h2>ANIMATION</h2></div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="inputSuccess">Time (second).</label>
+                    <input type="number" class="form-control" id="inputSuccess" value="0.5">
+                </div>
+                <div class="row" style="{{=it.isPause=='true' && 'display:none'}}">
+                    <div class="col-sm-6 col-md-6 animCont">
+                        <div>
+                            <button type="button" onclick="{{=it.copyFuncL}}" class="btn btn-primary">
+                                Copy
+                            </button>
+                            <button type="button" onclick="{{=it.pasteFuncL}}" class="btn btn-primary">
+                                Paste
+                            </button>
+                            <button type="button" onclick="{{=it.clearImgFuncL}}" class="btn btn-danger">
+                                Clear image
+                            </button>
+                            <button type="button" onclick="{{=it.clearMarkersFunc}}" class="btn btn-danger">
+                                Clear markers
+                            </button>
+                        </div>
+                        <div id="imgCont1" class="thumbnail">
+                            <div class="markerCont">
+                                <img data-src="holder.js/100%x180" src=""
+                                     style="height: 400px; width:100%; display: block;">
+
+                                <div class="mCont"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 animCont">
+                        <div>
+                            <button type="button" onclick="{{=it.copyFuncR}}" class="btn btn-primary">
+                                Copy
+                            </button>
+                            <button type="button" onclick="{{=it.clearImgFuncR}}" class="btn btn-danger">
+                                Clear image
+                            </button>
+                        </div>
+                        <div id="imgCont2" class="thumbnail">
+                            <div class="markerCont">
+                                <img data-src="holder.js/100%x180" src=""
+                                     style="height: 400px; width:100%;  display: block;">
+
+                                <div class="mCont"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <button onclick="{{=it.addNewAnimFunc}}" type="button" class="btn btn-primary  btn-lg btn-block"
+                        data-toggle="button">Add new animation
+                </button>
+                <button onclick="{{=it.addNewPauseFunc}}" type="button" class="btn btn-primary  btn-lg btn-block"
+                        data-toggle="button">Add pause
+                </button>
+
+            </div>
+            <button id="downBtn" onclick="{{=it.moveDownFunc}}" type="button" class="btn btn-lg btn-block"
+                    data-toggle="button"><span
+                    class="glyphicon glyphicon-chevron-down"></span></button>
+
+        </div>
+    </script>
+
+
+</head>
+<body>
+
+
+
+
+<!-- Fixed navbar -->
+<div class="navbar navbar-default navbar-fixed-top dark" role="navigation">
+    <div class="container pull-left" style="padding-top: 5px;">
+        <button type="button" class="btn btn-primary" data-toggle="button" onclick="ShowAnimation();">Show animation
+        </button>
+        <label style="padding-left: 55px;"></label>
+        <label class="checkbox-inline" style="color: #3da2bc;">
+            <input type="checkbox" id="flexiblebox"> flexible
+        </label>
+        <label class="checkbox-inline" style="color: #3da2bc;">
+            <input type="checkbox" id="loopbox"> loop
+        </label>
+        <label class="checkbox-inline" style="color: #3da2bc;">
+            <input type="checkbox" id="yoyobox"> yoyo
+        </label>
+
+
+    </div>
+
+
+    <div class="pull-right" data-toggle="buttons" style="padding-top: 15px; padding-right: 15px">
+        <p class="pull-right" style="color: #3da2bc; padding-left: 15px">Remove marker when clicked again</p>
+        <label class="btn btn-danger btn-xs" onclick="setMarkerState(false);">
+            <input type="radio"> YES
+        </label>
+        <label class="btn btn-danger btn-xs active" onclick="setMarkerState(true);">
+            <input type="radio"> NO
+        </label>
+    </div>
+</div>
+
+<div id="content" class="panel panel-default"></div>
+
+
+<div class="navbar navbar-default navbar-fixed-bottom dark" role="navigation">
+    <div style="padding-bottom: 5px">
+        <input type="file" id="files" name="files[]" multiple class="btn btn-danger"/>
+        <ul id="scrollbox"></ul>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h1 class="modal-title">Are you sure?</h1>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="delCurrentAnimation();">Yes</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Error-->
+<div class="modal fade" id="myModalErrorSize" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h1 class="modal-title">Error</h1>
+            </div>
+            <div class="modal-body">
+                <h2>The width and height of the all images should be the same.<br/></h2>
+                You tried to use an image with width - <span id="selected_image_width"
+                                                             class="label label-info">300</span>, heigth - <span
+                    id="selected_image_heigth" class="label label-info">245</span>.<br/>
+                But the current width - <span id="current_images_width" class="label label-info">300</span>, heigth -
+                <span id="current_images_heigth" class="label label-info">245</span>.<br/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Error-->
+<div class="modal fade" id="myModalErrorParams" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h1 class="modal-title">Error</h1>
+            </div>
+            <div class="modal-body">
+                <h2>You do not select an image.<br/></h2>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Show-->
+<div class="modal fade" id="myModalShow" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="closeAnimation();" aria-hidden="true">&times;</button>
+                <h1 class="modal-title">ANIMATION</h1>
+            </div>
+            <div class="modal-body">
+                <canvas id="canvas"></canvas>
+                <textarea id="params" class="form-control" rows="6" onfocus="this.select()"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeAnimation();">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="js/ui/jquery.ui.core.js"></script>
+<script src="js/ui/jquery.ui.widget.js"></script>
+<script src="js/ui/jquery.ui.mouse.js"></script>
+<script src="js/ui/jquery.ui.draggable.js"></script>
+<script src="js/ui/jquery.ui.droppable.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/doT.js"></script>
+
+<script src="js/utility.js"></script>
+<script src="js/morphjs/delaunay.js"></script>
+<script src="js/morphjs/tweener.js"></script>
+<script src="js/morphjs/update.js"></script>
+<script src="js/morphjs/imgCache.js"></script>
+<script src="js/morphjs/morphing.js"></script>
+<script src="js/morphjs/graphics.js"></script>
+</body>
+</html>

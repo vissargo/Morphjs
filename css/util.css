@@ -1,0 +1,86 @@
+.thumb {
+    height: 75px;
+    border: 1px solid #000;
+    margin: 10px 5px 0 0;
+}
+.markerCont {
+    position: relative;
+}
+
+.animCont {
+    min-width: 800px;
+    min-height: 400px;
+
+}
+
+canvas{
+    border:1px solid black;
+}
+
+/*
+.marker {
+    list-style-image: url(../img/marker.png);
+    margin-left: 13px;
+    margin-top: -5px;
+    font-size: 8px;
+    color: #ffff00;
+    position: absolute;
+
+}
+*/
+.marker {
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    margin-top: -5px;
+    background: #ffff00;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    position: absolute;
+    font-size: 8px;
+    color: #ffff00;
+    padding-left: 11px;
+    cursor:pointer;
+
+}
+
+.marker:hover {
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    margin-top: -5px;
+    background: #ffffaa;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    position: absolute;
+    font-size: 8px;
+    color: #ffffaa;
+    padding-left: 11px;
+    cursor:pointer;
+}
+
+.dark{
+    background: #1e466b;
+}
+
+body {
+    padding-top: 70px;
+    padding-bottom: 180px;
+}
+
+
+#scrollbox {
+    list-style: none;
+    width:100%;
+    padding: 10px 0;
+    background:#1e466b;
+    overflow:auto;
+    white-space: nowrap;
+}
+#scrollbox li {
+    padding: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
