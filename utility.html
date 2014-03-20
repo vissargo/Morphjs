@@ -35,7 +35,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="inputSuccess">Time (second).</label>
-                    <input type="number" class="form-control" id="inputSuccess" value="0.5">
+                    <input type="text" onkeyup="return checkForm(this);" onchange="return checkForm(this, true);" class="form-control" id="inputSuccess" value="0.5"/>
                 </div>
                 <div class="row" style="{{=it.isPause=='true' && 'display:none'}}">
                     <div class="col-sm-6 col-md-6 animCont">

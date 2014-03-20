@@ -112,6 +112,11 @@ function ShowAnimation() {
 
 }
 
+function checkForm(input, onchange){
+    input.value = input.value.replace(/[^\d.,]/g,"");
+    if(onchange)
+        input.value = input.value || 0.5;
+}
 
 function closeAnimation() {
     $('#myModalShow').modal('hide');
